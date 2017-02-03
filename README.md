@@ -27,8 +27,8 @@ p * x == x.map(&p)
 (p%[q]).call(x,y) == p.call(x, q.call(y))
 
 (p%[q,r]).call(x) == p.call(q.call(x), p.call(x)
-(p%[q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if p and r accept one argument
-(p%[q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if p and r accept 2 arguments
+(p%[q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if q and r accept one argument
+(p%[q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if q and r accept 2 arguments
 ```
 # Examples
 
