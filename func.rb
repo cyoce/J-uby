@@ -15,7 +15,6 @@ module Func
   def ^ (*args, &block)
     call(*args, &block)
   end
-  
   alias >> ^
   alias [] ^
   
@@ -81,13 +80,14 @@ module Func
     call(x, u.call(y))
   end
   
-  def % (args)
+  def train (args)
     if args.length == 2
       fork(*args)
     elsif args.length == 1
       hook(*args)
     end
   end
+  alias % train
   
   
   def !~ (x) # iterate until stable
@@ -101,6 +101,16 @@ module Func
   
   def =~ (x) # x == f(x) ?
     call(x) == x
+  end
+  
+  def + (init)
+    out = init.dup
+    ->(n){
+      (1+n-out.length).times do
+        out << call(*out[-init.length, init.length])
+      end
+      out[n]
+    }
   end
   
 end

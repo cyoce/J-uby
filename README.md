@@ -18,7 +18,6 @@ p^x == p.call(x)
 p << x == p.call(*x)
 p.>>(*x) == p.call(x)
 
-(p ** 3).call(x) == p.call(p.call(p.call(x))) # etc...
 
 p =~ x == (p.call(x) == x)
 
@@ -32,6 +31,22 @@ p * x == x.map(&p)
 (p%[q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if q and r accept one argument
 (p%[q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if q and r accept 2 arguments
 ```
+
+### Iteration operators
+`(p+init).call(n)` starts an array with init, then applies `p` to the last `init.length` entries `n` times
+<br>
+E.g. `fibonacci = :+ + [0,1]` 
+
+
+<br>
+
+`(p**n).call(x)` iterates `p` on `x` `n` times.
+
+
+<br>
+
+`p !~ x` iterates `p` on `x` until `x == p.(x)`
+
 # Examples
 
 **Join Array with Commas**
