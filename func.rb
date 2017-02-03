@@ -43,5 +43,3 @@ end
 class Proc
   include Func
 end
-
-puts $:
