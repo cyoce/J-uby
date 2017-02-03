@@ -8,6 +8,7 @@ module Func
   end
   
   alias >> ^
+  alias [] ^
   
   def & (x) # curry
     ->(*args){ call(x, *args) }
@@ -29,7 +30,12 @@ module Func
     call(*args)
   end
   
-  def >> (x) # iterate until stable
+  def >> (*args) # unsplat
+    call(args)
+  end
+  
+  
+  def !~ (x) # iterate until stable
     loop do
       last = x
       x = call(x)
@@ -38,16 +44,18 @@ module Func
     x
   end
   
+  def =~ (x) # equal to f of x?
+    call(x) == x
+  end
+  
 end
 
 class Symbol
-  include Func
+  prepend Func
   
   def call(*args, &block)
     to_proc.call(*args, &block)
   end
-  
-  alias [] call
 end
 
 class Proc
