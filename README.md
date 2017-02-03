@@ -18,6 +18,8 @@ p^x == p.call(x)
 p << x == p.call(*x)
 p.>>(*x) == p.call(x)
 
+(p ** 3).call(x) == p.call(p.call(p.call(x))) # etc...
+
 p =~ x == (p.call(x) == x)
 
 p / x == x.inject(&p)

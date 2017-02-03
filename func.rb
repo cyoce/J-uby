@@ -3,6 +3,15 @@ module Func
     ->(*args){ other.call(call(*args)) }
   end
   
+  def ** (n)
+    ->(x){
+      n.times do
+        x = call(x)
+      end
+      x
+    }
+  end
+  
   def ^ (*args, &block)
     call(*args, &block)
   end
