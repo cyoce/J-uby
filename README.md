@@ -55,8 +55,8 @@ E.g. `fibonacci = :+ + [0,1]`
 ~:*&?,
 
 (~ :*) & ','                 # more readable
-->(s){ (~ :*).call(',', s) } # turn & into explicit lambda
-->(s){ :*.call(s, ',') }     # (~p).call(x,y) == p.call(y,x)
+->(s){ (~ :*).call(',', s) } # turn `&` into explicit lambda
+->(s){ :*.call(s, ',') }     # `(~p).call(x,y) == p.call(y,x)`
 ->(s){ s.*(',') }            # turn symbol call into infix notation
 ->(s){ s.join(',') }         # Array#* is an alias for Array#join
 ```
@@ -64,8 +64,8 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 :/%[:/&:+,:size]
 
-:/ % [:/ & :+, :size]                             # more readable 
-->(x){ :/.call((:/ & :+).call(x), :size.call(x)}  # expand fork to lambda
-->(x){ (:+ / x) / x.size }                        # transform `.calls` on procs to method accesses
-->(x){ x.reduce(:+) / x.size }
+:/ % [:/ & :+, :size]                              # more readable 
+->(x){ :/.call((:/ & :+).call(x), :size.call(x)) } # expand fork to lambda
+->(x){ (:+ / x) / x.size }                         # transform `.call`s on procs to method accesses
+->(x){ x.reduce(:+) / x.size }                     # expand `p / x` to `x.reduce(&p)`
 ```
