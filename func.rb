@@ -7,6 +7,8 @@ module Func
     call(*args, &block)
   end
   
+  alias >> ^
+  
   def & (x) # curry
     ->(*args){ call(x, *args) }
   end
@@ -23,11 +25,19 @@ module Func
     ->(x, y, *args){ call(y, x, *args) }
   end
   
-  def io
-    out = call(*Array.new(arity){gets.chomp})
-    puts out
-    out
+  def << (args) # splat
+    call(*args)
   end
+  
+  def >> (x) # iterate until stable
+    loop do
+      last = x
+      x = call(x)
+      break if x == last
+    end
+    x
+  end
+  
 end
 
 class Symbol
