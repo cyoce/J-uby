@@ -34,6 +34,52 @@ module Func
     call(args)
   end
   
+  def fork(u,v)
+    ->(*args){
+      if args.length == 2
+        fork2(u, v, args[0], args[1])
+      else
+        fork1(u, v, args[0])
+      end
+    }
+  end
+  
+  def fork2(u,v, x,y)
+    call(u.call(x,y), v.call(x,y))
+  rescue ArgumentError
+    call(u.call(x), v.call(y))
+  end
+  
+  def fork1(u,v, x)
+    call(u.call(x), v.call(x))
+  end
+  
+  def hook(u)
+    ->(*args){
+      if args.length == 2
+        hook2(u, *args)
+      else
+        hook1(u, *args)
+      end
+    }
+  end
+  
+  def hook1(u, x)
+    call(x, u.call(x))
+  end
+  
+  def hook2(u, x,y)
+    call(x, u.call(y))
+  end
+  
+  def % (args)
+    if args.length == 2
+      fork(*args)
+    elsif args.length == 1
+      hook(*args)
+    end
+  end
+  
   
   def !~ (x) # iterate until stable
     loop do
@@ -44,7 +90,7 @@ module Func
     x
   end
   
-  def =~ (x) # equal to f of x?
+  def =~ (x) # x == f(x) ?
     call(x) == x
   end
   
