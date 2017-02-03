@@ -17,6 +17,8 @@ Firstly, Symbols are now callable without first calling `.to_proc` on them. Proc
     
     p =~ x == (p.call(x) == x)
     
+    p / x == x.inject(&p)
+    p * x == x.map(&p)
     
     (p%[q]).call(x) == p.call(x,q.call(x))
     (p%[q]).call(x,y) == p.call(x, q.call(y))
@@ -24,3 +26,25 @@ Firstly, Symbols are now callable without first calling `.to_proc` on them. Proc
     (p%[q,r]).call(x) == p.call(q.call(x), p.call(x)
     (p%[q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if p and r accept one argument
     (p%[q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if p and r accept 2 arguments
+
+# Examples
+
+**Join Array with Commas**
+
+    ~:*&?,
+    
+    (~ :*) & ","
+    ->(s){ (~ :*).call(",", s) }
+    ->(s){ :*.call(s, ",") }
+    ->(s){ s.*(",") }
+    ->(s){ s.join(",") }
+    
+**Average of a list**
+
+    :/%[:/&:+,:size]
+    
+    :/ % [:/ & :+, :size]
+    ->(x){ :/.call((:/ & :+).call(x), :size.call(x)}
+    ->(x){ :/.call(:+/x, x.size) }
+    ->(x){ (:+/x) / x.size }
+    ->(x){ x.inject(:+) / x.size }
