@@ -37,19 +37,18 @@ p * x == x.map(&p)
 ```ruby
 ~:*&?,
 
-(~ :*) & ","
-->(s){ (~ :*).call(",", s) }
-->(s){ :*.call(s, ",") }
-->(s){ s.*(",") }
-->(s){ s.join(",") }
+(~ :*) & ','                 # more readable
+->(s){ (~ :*).call(',', s) } # turn & into explicit lambda
+->(s){ :*.call(s, ',') }     # (~p).call(x,y) == p.call(y,x)
+->(s){ s.*(',') }            # turn symbol call into infix notation
+->(s){ s.join(',') }         # Array#* is an alias for Array#join
 ```
 **Average of an Array**
 ```ruby
 :/%[:/&:+,:size]
 
-:/ % [:/ & :+, :size]
-->(x){ :/.call((:/ & :+).call(x), :size.call(x)}
-->(x){ :/.call(:+/x, x.size) }
-->(x){ (:+/x) / x.size }
-->(x){ x.inject(:+) / x.size }
+:/ % [:/ & :+, :size]                             # more readable 
+->(x){ :/.call((:/ & :+).call(x), :size.call(x)}  # expand fork to lambda
+->(x){ (:+ / x) / x.size }                        # transform `.calls` on procs to method accesses
+->(x){ x.reduce(:+) / x.size }
 ```
