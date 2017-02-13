@@ -79,4 +79,6 @@ E.g. `fibonacci = :+ + [0,1]`
 (:~ | (:& & :/)) | (:| & :reverse)
 ->(f){ :reverse | (:~ | (:& & :/) & f) }
 ->(f){ :reverse |  (:/ & ~f) }
+->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } }
+->(x){ ->(f){ ~f/ x.reverse } }
 ```
