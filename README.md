@@ -76,7 +76,7 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 :~|:&&:/|:|&:reverse
 
-(:~ | (:& & :/)) | (:| & reverse)
+(:~ | (:& & :/)) | (:| & :reverse)
 ->(f){ :reverse | (:~ | (:& & :/) & f) }
 ->(f){ :reverse |  (:/ & ~f) }
 ```
