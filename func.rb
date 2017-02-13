@@ -125,6 +125,12 @@ class Symbol
   def call(*args, &block)
     to_proc.call(*args, &block)
   end
+  
+  alias [] call
+  
+  def =~ (other)
+    to_proc =~ other
+  end
 end
 
 class Proc
