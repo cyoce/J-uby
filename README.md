@@ -24,6 +24,7 @@ p =~ x == (p.call(x) == x)
 
 p / x == x.inject(&p)
 p * x == x.map(&p)
+
  
 (p%[q]).call(x) == p.call(x,q.call(x))
 (p%[q]).call(x,y) == p.call(x, q.call(y))
@@ -69,4 +70,13 @@ E.g. `fibonacci = :+ + [0,1]`
 ->(x){ :/.call((:/ & :+).call(x), :size.call(x)) } # expand fork to lambda
 ->(x){ (:+ / x) / x.size }                         # transform `.call`s on procs to method accesses
 ->(x){ x.reduce(:+) / x.size }                     # expand `p / x` to `x.reduce(&p)`
+```
+
+**Haskell-Style `foldr` from the existing `/`
+```ruby
+:~|:&&:/|:|&:reverse
+
+(:~ | (:& & :/)) | (:| & reverse)
+->(f){ :reverse | (:~ | (:& & :/) & f) }
+->(f){ :reverse |  (:/ & ~f) }
 ```
