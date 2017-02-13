@@ -17,6 +17,7 @@ p^x == p.call(x)
 
 p << x == p.call(*x)
 p.>>(*x) == p.call(x)
+p.-(x,y) == p.call(x).call(y)
 
 
 p =~ x == (p.call(x) == x)

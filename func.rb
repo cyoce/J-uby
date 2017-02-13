@@ -22,6 +22,10 @@ module Func
     ->(*args){ call(x, *args) }
   end
   
+  def - (*args)
+    :^ / [self, *args]
+  end
+  
   def / (x) # fold
     x.inject(&self)
   end
@@ -79,7 +83,7 @@ module Func
   def hook2(u, x,y)
     call(x, u.call(y))
   end
-  
+
   def train (args)
     if args.length == 2
       fork(*args)
@@ -99,7 +103,7 @@ module Func
     x
   end
   
-  def =~ (x) # x == f(x) ?
+  def =~ (x)
     call(x) == x
   end
   
@@ -110,13 +114,13 @@ module Func
         out << call(*out[-init.length, init.length])
       end
       out[n]
-    }
+    } 
   end
   
 end
 
 class Symbol
-  prepend Func
+  include Func
   
   def call(*args, &block)
     to_proc.call(*args, &block)
