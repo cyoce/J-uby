@@ -74,7 +74,7 @@ E.g. `fibonacci = :+ + [0,1]`
 
 **Haskell-Style `foldr` from the existing `/`**
 ```ruby
-:~|:&&:/|:|&:reverse
+:~|:& &:/|:|&:reverse
 
 (:~ | (:& & :/)) | (:| & :reverse)
 ->(f){ :reverse | (:~ | (:& & :/) & f) }
