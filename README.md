@@ -72,11 +72,13 @@ E.g. `fibonacci = :+ + [0,1]`
 ->(x){ x.reduce(:+) / x.size }                     # expand `p / x` to `x.reduce(&p)`
 ```
 
-**Haskell-Style `foldr` from the existing `/`
+**Haskell-Style `foldr` from the existing `/`**
 ```ruby
-:~|:&&:/|:|&:reverse
+:~|:& &:/|:|&:reverse
 
-(:~ | (:& & :/)) | (:| & reverse)
+(:~ | (:& & :/)) | (:| & :reverse)
 ->(f){ :reverse | (:~ | (:& & :/) & f) }
 ->(f){ :reverse |  (:/ & ~f) }
+->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } }
+->(x){ ->(f){ ~f/ x.reverse } }
 ```
