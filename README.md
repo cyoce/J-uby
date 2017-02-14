@@ -59,7 +59,7 @@ E.g. `fibonacci = :+ + [0,1]`
 (~ :*) & ','                 # more readable
 ->(s){ (~ :*).call(',', s) } # turn `&` into explicit lambda
 ->(s){ :*.call(s, ',') }     # `(~p).call(x,y) == p.call(y,x)`
-->(s){ s.*(',') }            # turn symbol call into infix notation
+->(s){ s.*(',') }            # turn symbol call into explicit method call
 ->(s){ s.join(',') }         # Array#* is an alias for Array#join
 ```
 **Average of an Array**
