@@ -84,11 +84,13 @@ module Func
     call(x, u.call(y))
   end
 
-  def train (args)
-    if args.length == 2
-      fork(*args)
-    elsif args.length == 1
-      hook(*args)
+  def train (arg)
+    if arg.is_a?(Array)
+      if arg.length == 2
+        fork(*arg)
+      end
+    else
+      hook(arg)
     end
   end
   alias % train
