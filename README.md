@@ -73,12 +73,13 @@ E.g. `fibonacci = :+ + [0,1]`
 ```
 
 **Haskell-Style `foldr` from the existing `/`**
+*Note: as this one is especially complicated, some intermediate steps are omitted*
 ```ruby
 :~|:& &:/|:|&:reverse
 
-(:~ | (:& & :/)) | (:| & :reverse)
-->(f){ :reverse | (:~ | (:& & :/) & f) }
-->(f){ :reverse |  (:/ & ~f) }
-->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } }
-->(x){ ->(f){ ~f/ x.reverse } }
+(:~ | (:& & :/)) | (:| & :reverse)                 # readable
+->(f){ :reverse | (:~ | (:& & :/) & f) }           # transform to lambda
+->(f){ :reverse |  (:/ & ~f) }                     # reduce
+->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } } # expand into curried lambda
+->(x){ ->(f){ ~f/ x.reverse } }                    # simplify `.call`s
 ```
