@@ -9,11 +9,11 @@ Firstly, Symbols are now callable without first calling `.to_proc` on them. Proc
 ```ruby
 sym.call(x) == sym.to_proc.call(x)
 
-(p|q).call(x) == q.call(p.call(x))
-(p&x).call(y) == p.call(x,y)
+(p | q).call(x) == q.call(p.call(x))
+(p & x).call(y) == p.call(x,y)
 (~p).call(x,y) == p.call(y,x)
 
-p^x == p.call(x)
+p ^ x == p.call(x)
 
 p << x == p.call(*x)
 p.>>(*x) == p.call(x)
@@ -26,12 +26,12 @@ p / x == x.inject(&p)
 p * x == x.map(&p)
 
  
-(p%[q]).call(x) == p.call(x,q.call(x))
-(p%[q]).call(x,y) == p.call(x, q.call(y))
+(p % [q]).call(x) == p.call(x,q.call(x))
+(p % [q]).call(x,y) == p.call(x, q.call(y))
 
-(p%[q,r]).call(x) == p.call(q.call(x), p.call(x)
-(p%[q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if q and r accept one argument
-(p%[q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if q and r accept 2 arguments
+(p % [q,r]).call(x) == p.call(q.call(x), p.call(x)
+(p % [q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if q and r accept one argument
+(p % [q,r]).call(x,y) == p.call(q.call(x,y), r.call(x,y)) # if q and r accept 2 arguments
 ```
 
 ### Iteration operators
