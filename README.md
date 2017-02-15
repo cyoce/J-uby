@@ -64,7 +64,7 @@ E.g. `fibonacci = :+ + [0,1]`
 ```
 **Average of an Array**
 ```ruby
-:/%[:/&:+,:size]
+:/ % [:/&:+,:size]
 
 :/ % [:/ & :+, :size]                              # more readable 
 ->(x){ :/.call((:/ & :+).call(x), :size.call(x)) } # expand fork to lambda
