@@ -110,12 +110,14 @@ module Func
   end
   
   def + (init)
-    out = init.dup
+    
     ->(n){
+      out = init.dup
       (1+n-out.length).times do
         out << call(*out[-init.length, init.length])
+        out.shift
       end
-      out[n]
+      out[-1]
     } 
   end
   
