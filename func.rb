@@ -88,9 +88,11 @@ module Func
     if arg.is_a?(Array)
       if arg.length == 2
         fork(*arg)
+      elsif arg.length == 1
+        hook(*arg)
       end
     else
-      hook(arg)
+      self.call(&arg)
     end
   end
   alias % train
@@ -110,14 +112,14 @@ module Func
   end
   
   def + (init)
-    
+    len = 1-init.length
     ->(n){
       out = init.dup
-      (1+n-out.length).times do
-        out << call(*out[-init.length, init.length])
-        out.shift
+      (n+len).times do
+        out << call(*out)
+        out.shift()
       end
-      out[-1]
+      out.last
     } 
   end
   
