@@ -80,6 +80,6 @@ E.g. `fibonacci = :+ + [0,1]`
 (:~ | (:& & :/)) | (:| & :reverse)                 # readable
 ->(f){ :reverse | (:~ | (:& & :/) & f) }           # transform to lambda
 ->(f){ :reverse |  (:/ & ~f) }                     # reduce
-->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } } # expand into curried lambda
-->(x){ ->(f){ ~f/ x.reverse } }                    # simplify `.call`s
+->(f){ ->(x){ (:/ & ~f).call(:reverse.call(x)) } } # expand `|` into curried lambda
+->(f){ ->(x){ ~f/ x.reverse } }                    # simplify `.call`s
 ```
