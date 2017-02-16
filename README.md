@@ -65,7 +65,7 @@ E.g. `fibonacci = :+ + [0,1]`
 ```
 **Average of an Array**
 ```ruby
-:/%[:/&:+,:size]
+:/ % [:/&:+,:size]
 
 :/ % [:/ & :+, :size]                              # more readable 
 ->(x){ :/.call((:/ & :+).call(x), :size.call(x)) } # expand fork to lambda
@@ -81,6 +81,6 @@ E.g. `fibonacci = :+ + [0,1]`
 (:~ | (:& & :/)) | (:| & :reverse)                 # readable
 ->(f){ :reverse | (:~ | (:& & :/) & f) }           # transform to lambda
 ->(f){ :reverse |  (:/ & ~f) }                     # reduce
-->(x){ ->(f){ (:/ & ~f).call(:reverse.call(x)) } } # expand into curried lambda
-->(x){ ->(f){ ~f/ x.reverse } }                    # simplify `.call`s
+->(f){ ->(x){ (:/ & ~f).call(:reverse.call(x)) } } # expand `|` into curried lambda
+->(f){ ->(x){ ~f/ x.reverse } }                    # simplify `.call`s
 ```
