@@ -25,9 +25,10 @@ p =~ x == (p.call(x) == x)
 p / x == x.inject(&p)
 p * x == x.map(&p)
 
+ p % b == p.call(&b)
  
-(p % q).call(x) == p.call(x,q.call(x))
-(p % q).call(x,y) == p.call(x, q.call(y))
+(p % [q]).call(x) == p.call(x,q.call(x))
+(p % [q]).call(x,y) == p.call(x, q.call(y))
 
 (p % [q,r]).call(x) == p.call(q.call(x), p.call(x)
 (p % [q,r]).call(x,y) == p.call(q.call(x), r.call(y))     # if q and r accept one argument
