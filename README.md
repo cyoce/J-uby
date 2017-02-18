@@ -36,7 +36,7 @@ p % b == p.(&b)
 ```
 
 ### Iteration operators
-`(p+init).` starts an array with init, then applies `p` to the last `init.length` entries `n` times
+`(p+init).(n)` starts an array with init, then applies `p` to the last `init.length` entries `n` times
 <br>
 E.g. `fibonacci = :+ + [0,1]` 
 
