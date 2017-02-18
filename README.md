@@ -32,7 +32,7 @@ p % b == p.(&b)
 
 (p % [q,r]).(x) == p.(q.(x), p.(x)
 (p % [q,r]).(x,y) == p.(q.(x), r.(y))          # if q and r accept one argument
-(p % [q,r]).call(x,y) == p.(q.(x,y), r.(x,y))  # if q and r accept 2 arguments
+(p % [q,r]).(x,y) == p.(q.(x,y), r.(x,y))  # if q and r accept 2 arguments
 ```
 
 ### Iteration operators
