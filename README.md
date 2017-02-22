@@ -27,8 +27,6 @@ p =~ x == (p.(x) == x)
 p / x == x.inject(&p)
 p * x == x.map(&p)
 
-<<<<<<< HEAD
-=======
 p % b == p.(&b)
 
 (p % [q]).(x) == p.call(x,q.(x))
