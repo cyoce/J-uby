@@ -30,8 +30,7 @@ p * x == x.map(&p)
 <<<<<<< HEAD
 =======
 p % b == p.(&b)
->>>>>>> ce3ea079e592d21acdfcbf3f35fa04052e3dc2bd
- 
+
 (p % [q]).(x) == p.call(x,q.(x))
 (p % [q]).(x,y) == p.(x, q.(y))
 
