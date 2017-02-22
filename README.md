@@ -11,7 +11,7 @@ sym.(*args) == sym.to_proc.(*args)
 
 (p | q).(*args) == q.(p.(*args))
 (p & x).(*args) == p.(x, *args)
-(~p).(x,y, *args) == p.(y,x, *args)
+(~p).(*args) == p.(*args.reverse)
 
 p ^ x == p.call(x)
 
