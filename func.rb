@@ -15,7 +15,6 @@ module Func
   def ^ (*args, &block)
     call(*args, &block)
   end
-  alias >> ^
   alias [] ^
   
   def & (x) # curry
@@ -35,15 +34,16 @@ module Func
   end
   
   def ~ # rev arguments
-    ->(x, y, *args){ call(y, x, *args) }
+    ->(*args){ call(*args.reverse!) }
   end
   
   def << (args) # splat
     call(*args)
+    
   end
   
-  def >> (*args) # unsplat
-    call(args)
+  def >> (*args, &block) # unsplat
+    block ? call(args, block) : call(args)
   end
   
   def fork(u,v)
