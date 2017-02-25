@@ -1,6 +1,6 @@
 module Func
   def | (other) # compose
-    ->(*args){ other.call(call(*args)) }
+    ->(*args, &block){ other.call(call(*args, &block)) }
   end
   
   def ** (n)
@@ -18,7 +18,7 @@ module Func
   alias [] ^
   
   def & (x) # curry
-    ->(*args){ call(x, *args) }
+    ->(*args, &block){ call(x, *args, &block) }
   end
   
   def - (*args)
@@ -34,11 +34,11 @@ module Func
   end
   
   def ~ # rev arguments
-    ->(*args){ call(*args.reverse!) }
+    ->(*args, &block){ call(*args.reverse!, &block) }
   end
   
-  def << (args) # splat
-    call(*args)
+  def << (args, &block) # splat
+    call(*args, &block)
     
   end
   
