@@ -19,9 +19,6 @@ P << x == P.(*x)
 P.>>(*x) == P.(x)
 P.-(x,y) == P.(x).(y)
 
-P << block == P.call(&block)
-
-
 P =~ x == (P.(x) == x)
 
 P / x == x.inject(&P)
@@ -104,9 +101,9 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 :& &:all?|~:<<&:even?
 
-(:& & :all?) | (~:<< & :even?)              # readable
-->(a){ (~:<< & :even?).((:& & :all?).(a)) } # expand | into lambda
-->(a){ (~:<<).(:even?, :all? & a) }         # uncurry &'s
-->(a){ (:all? & a) << :even? }              # apply ~:<<
-->(a){ a.all?(&:even?) }                    # simplify & and <<
+(:& & :all?) | (~:% & :even?)              # readable
+->(a){ (~:% & :even?).((:& & :all?).(a)) } # expand | into lambda
+->(a){ (~:%).(:even?, :all? & a) }         # uncurry &'s
+->(a){ (:all? & a) % :even? }              # apply ~:%
+->(a){ a.all?(&:even?) }                    # simplify & and %
 ```

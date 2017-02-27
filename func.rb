@@ -44,7 +44,7 @@ module Func
     end
 
     def << (args, &block) # splat
-        args.is_a?(Array) ? call(*args, &block) : call(&args)
+        call(*args, &block)
 
     end
 
