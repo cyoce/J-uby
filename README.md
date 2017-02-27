@@ -99,7 +99,7 @@ E.g. `fibonacci = :+ + [0,1]`
 ### Alternative without `map`
 
 ```ruby
-:& &:all?|~:<<&:even?
+:& &:all?|~:%&:even?
 
 (:& & :all?) | (~:% & :even?)              # readable
 ->(a){ (~:% & :even?).((:& & :all?).(a)) } # expand | into lambda
