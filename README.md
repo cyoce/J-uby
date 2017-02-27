@@ -29,6 +29,8 @@ P * x == x.map(&P)
 
 P % b == P.(&b)
 
+(P**Q).(*args) == P.(*args.map(&Q))
+
 (P % [Q]).(x) == P.call(x,Q.(x))
 (P % [Q]).(x,y) == P.(x, Q.(y))
 
