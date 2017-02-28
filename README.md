@@ -59,19 +59,19 @@ E.g. `fibonacci = :+ + [0,1]`
 ~:*&?,
 
 (~ :*) & ','                 # more readable
-->(s){ (~ :*).call(',', s) } # turn `&` into explicit lambda
-->(s){ :*.call(s, ',') }     # `(~P).call(x,y) == P.call(y,x)`
-->(s){ s.*(',') }            # turn symbol call into explicit method call
-->(s){ s.join(',') }         # Array#* is an alias for Array#join
+->(a){ (~ :*).(',', s) }     # turn `&` into explicit lambda
+->(a){ :*.(s, ',') }         # `(~P).(x,y) == P.(y,x)`
+->(a){ s.*(',') }            # turn symbol call into explicit method call
+->(a){ s.join(',') }         # Array#* is an alias for Array#join
 ```
 ## Average of an Array
 ```ruby
 :/ % [:/&:+,:size]
 
 :/ % [:/ & :+, :size]                              # more readable
-->(x){ :/.call((:/ & :+).call(x), :size.call(x)) } # expand fork to lambda
-->(x){ (:+ / x) / x.size }                         # transform `.call`s on procs to method accesses
-->(x){ x.reduce(:+) / x.size }                     # expand `P / x` to `x.reduce(&P)`
+->(a){ :/.((:/ & :+).(x), :size.(x)) } # expand fork to lambda
+->(a){ (:+ / x) / x.size }                         # transform `.call`s on procs to method accesses
+->(a){ x.reduce(:+) / x.size }                     # expand `P / x` to `x.reduce(&P)`
 ```
 
 ## Haskell-Style `foldr` from the existing `/`
@@ -82,8 +82,8 @@ E.g. `fibonacci = :+ + [0,1]`
 (:~ | (:& & :/)) | (:| & :reverse)                 # readable
 ->(f){ :reverse | (:~ | (:& & :/) & f) }           # transform to lambda
 ->(f){ :reverse |  (:/ & ~f) }                     # reduce
-->(f){ ->(x){ (:/ & ~f).call(:reverse.call(x)) } } # expand `|` into curried lambda
-->(f){ ->(x){ ~f/ x.reverse } }                    # simplify `.call`s
+->(f){ ->(a){ (:/ & ~f).(:reverse.(a)) } }         # expand `|` into curried lambda
+->(f){ ->(a){ ~f/ a.reverse } }                    # simplify `.call`s
 ```
 
 ## Check if array is all even
@@ -91,10 +91,10 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 :* *:even?|:all?
 
-(:* * :even?) | :all?           # readable
+(:* * :even?) | :all?             # readable
 ->(a){ :all?.((:* * :even?).(a))} # expand | to lambda
-->(a){ (:even? * a).all? }      # simplify explicit symbol calls
-->(a){ a.map(&:even?).all? }    # replace Proc#* with Array#map
+->(a){ (:even? * a).all? }        # simplify explicit symbol calls
+->(a){ a.map(&:even?).all? }      # replace Proc#* with Array#map
 ```
 ### Alternative without `map`
 
@@ -105,5 +105,5 @@ E.g. `fibonacci = :+ + [0,1]`
 ->(a){ (~:% & :even?).((:& & :all?).(a)) } # expand | into lambda
 ->(a){ (~:%).(:even?, :all? & a) }         # uncurry &'s
 ->(a){ (:all? & a) % :even? }              # apply ~:%
-->(a){ a.all?(&:even?) }                    # simplify & and %
+->(a){ a.all?(&:even?) }                   # simplify & and %
 ```
