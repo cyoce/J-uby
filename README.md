@@ -13,7 +13,7 @@ sym.(*args) == sym.to_proc.(*args)
 (P & x).(*args) == P.(x, *args)
 (~P).(*args) == P.(*args.reverse)
 
-P ^ x == P.call(x)
+P ^ x == P.(x)
 
 P << x == P.(*x)
 P.>>(*x) == P.(x)
@@ -24,16 +24,16 @@ P =~ x == (P.(x) == x)
 P / x == x.inject(&P)
 P * x == x.map(&P)
 
-P % b == P.(&b)
+P % Q == P.(&Q)
 
 (P**Q).(*args) == P.(*args.map(&Q))
 
-(P % [Q]).(x) == P.call(x,Q.(x))
+(P % [Q]).(x)   == P.(x, Q.(x))
 (P % [Q]).(x,y) == P.(x, Q.(y))
 
-(P % [Q,R]).(x) == P.(Q.(x), P.(x)
-(P % [Q,R]).(x,y) == P.(Q.(x), R.(y))          # if Q and R accept one argument
-(P % [Q,R]).(x,y) == P.(Q.(x,y), R.(x,y))      # if Q and R accept 2 arguments
+(P % [Q,R]).(x)   == P.(Q.(x), P.(x)
+(P % [Q,R]).(x,y) == P.(Q.(x), R.(y))      # if Q and R accept one argument
+(P % [Q,R]).(x,y) == P.(Q.(x,y), R.(x,y))  # if Q and R accept 2 arguments
 ```
 
 ### Iteration operators
@@ -59,18 +59,18 @@ E.g. `fibonacci = :+ + [0,1]`
 ~:*&?,
 
 (~ :*) & ','                               # more readable
-->(a){ (~ :*).(',', s) }                   # turn `&` into explicit lambda
-->(a){ :*.(s, ',') }                       # `(~P).(x,y) == P.(y,x)`
-->(a){ s.*(',') }                          # turn symbol call into explicit method call
-->(a){ s.join(',') }                       # Array#* is an alias for Array#join
+->(a){ (~ :*).(',', a) }                   # turn `&` into explicit lambda
+->(a){ :*.(a, ',') }                       # `(~P).(x,y) == P.(y,x)`
+->(a){ a.*(',') }                          # turn symbol call into explicit method call
+->(a){ a.join(',') }                       # Array#* is an alias for Array#join
 ```
 ## Average of an Array
 ```ruby
 :/ % [:/ & :+, :size]
 
-->(a){ :/.((:/ & :+).(x), :size.(x)) }     # expand fork to lambda
-->(a){ (:+ / x) / x.size }                 # transform `.call`s on procs to method accesses
-->(a){ x.reduce(:+) / x.size }             # expand `P / x` to `x.reduce(&P)`
+->(a){ :/.((:/ & :+).(a), :size.(a)) }     # expand fork to lambda
+->(a){ (:+ / a) / a.size }                 # transform `.call`s on procs to method accesses
+->(a){ a.reduce(:+) / a.size }             # expand `P / x` to `x.reduce(&P)`
 ```
 
 ## Haskell-Style `foldr` from the existing `/`
