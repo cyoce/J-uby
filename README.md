@@ -4,7 +4,13 @@
 
 J-uby aims to augment how Ruby programming with Symbols and Procs works by monkeypatching the aforementioned classes.
 
-Firstly, Symbols are now callable without first calling `.to_proc` on them. Procs have also gained many more operators
+Firstly, Symbols are now callable without first calling `.to_proc` on them. Procs have also gained many more operators.
+
+## Tacit programming
+
+Tacit programming is manipulating functions to create other functions without specifying their arguments. A basic example would be a function that adds one to its argument. In Ruby, this would be done with a lambda: `->(x){1+x}`. Using the equality `(:sym & x).(y) == x.sym(y)`, we can simplify this lambda to `:+ & 1`.  
+
+Ruby lambdas or expressions can be converted to tacit J-uby code using the following equalities:
 
 ```ruby
 sym.(*args) == sym.to_proc.(*args)
@@ -32,8 +38,8 @@ P % Q == P.(&Q)
 (P % [Q]).(x,y) == P.(x, Q.(y))
 
 (P % [Q,R]).(x)   == P.(Q.(x), P.(x)
-(P % [Q,R]).(x,y) == P.(Q.(x), R.(y))      # if Q and R accept one argument
-(P % [Q,R]).(x,y) == P.(Q.(x,y), R.(x,y))  # if Q and R accept 2 arguments
+(P % [Q,R]).(x,y) == P.(Q.(x), R.(y))           # if Q and R accept one argument
+(P % [Q,R]).(x,y) == P.(Q.(x,y), R.(x,y))       # if Q and R accept 2 arguments
 ```
 
 ### Iteration operators
@@ -58,19 +64,19 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 ~:*&?,
 
-(~ :*) & ','                               # more readable
-->(a){ (~ :*).(',', a) }                   # turn `&` into explicit lambda
-->(a){ :*.(a, ',') }                       # `(~P).(x,y) == P.(y,x)`
-->(a){ a.*(',') }                          # turn symbol call into explicit method call
-->(a){ a.join(',') }                       # Array#* is an alias for Array#join
+(~ :*) & ','                                    # more readable
+->(a){ (~ :*).(',', a) }                        # turn `&` into explicit lambda
+->(a){ :*.(a, ',') }                            # `(~P).(x,y) == P.(y,x)`
+->(a){ a.*(',') }                               # turn symbol call into explicit method call
+->(a){ a.join(',') }                            # Array#* is an alias for Array#join
 ```
 ## Average of an Array
 ```ruby
 :/ % [:/ & :+, :size]
 
-->(a){ :/.((:/ & :+).(a), :size.(a)) }     # expand fork to lambda
-->(a){ (:+ / a) / a.size }                 # transform `.call`s on procs to method accesses
-->(a){ a.reduce(:+) / a.size }             # expand `P / x` to `x.reduce(&P)`
+->(a){ :/.((:/ & :+).(a), :size.(a)) }          # expand fork to lambda
+->(a){ (:+ / a) / a.size }                      # transform `.call`s on procs to method accesses
+->(a){ a.reduce(:+) / a.size }                  # expand `P / x` to `x.reduce(&P)`
 ```
 
 ## Haskell-Style `foldr` from the existing `/`
@@ -78,31 +84,32 @@ E.g. `fibonacci = :+ + [0,1]`
 ```ruby
 :~|:& &:/|:|&:reverse
 
-(:~ | (:& & :/)) | (:| & :reverse)         # readable
-->(f){ :reverse | (:~ | (:& & :/) & f) }   # transform to lambda
-->(f){ :reverse |  (:/ & ~f) }             # reduce
-->(f){ ->(a){ (:/ & ~f).(:reverse.(a)) } } # expand `|` into curried lambda
-->(f){ ->(a){ ~f/ a.reverse } }            # simplify `.call`s
+(:~ | (:& & :/)) | (:| & :reverse)              # readable
+->(f){ (:| & :reverse).((:~ | (:& & :/)).(f)) } # transform to lambda
+->(f){ :reverse |  (:/ & ~f) }                  # reduce
+->(f){ ->(a){ (:/ & ~f).(:reverse.(a)) } }      # expand `|` into curried lambda
+->(f){ ->(a){ ~f / a.reverse } }                # simplify `.call`s
 ```
+
 
 ## Check if array is all even
 
 ```ruby
 :* *:even?|:all?
 
-(:* * :even?) | :all?                      # readable
-->(a){ :all?.((:* * :even?).(a))}          # expand | to lambda
-->(a){ (:even? * a).all? }                 # simplify explicit symbol calls
-->(a){ a.map(&:even?).all? }               # replace Proc#* with Array#map
+(:* * :even?) | :all?                           # readable
+->(a){ :all?.((:* * :even?).(a))}               # expand | to lambda
+->(a){ (:even? * a).all? }                      # simplify explicit symbol calls
+->(a){ a.map(&:even?).all? }                    # replace Proc#* with Array#map
 ```
 ### Alternative without `map`
 
 ```ruby
 :& &:all?|~:%&:even?
 
-(:& & :all?) | (~:% & :even?)              # readable
-->(a){ (~:% & :even?).((:& & :all?).(a)) } # expand | into lambda
-->(a){ (~:%).(:even?, :all? & a) }         # uncurry &'s
-->(a){ (:all? & a) % :even? }              # apply ~:%
-->(a){ a.all?(&:even?) }                   # simplify & and %
+(:& & :all?) | (~:% & :even?)                   # readable
+->(a){ (~:% & :even?).((:& & :all?).(a)) }      # expand | into lambda
+->(a){ (~:%).(:even?, :all? & a) }              # uncurry &'s
+->(a){ (:all? & a) % :even? }                   # apply ~:%
+->(a){ a.all?(&:even?) }                        # simplify & and %
 ```
