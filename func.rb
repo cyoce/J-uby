@@ -13,7 +13,7 @@ module Func
             }
         else
             ->(*args){
-                call(*args.map(&n))
+                n.(*args.map(&self))
             }
         end
     end
@@ -146,5 +146,9 @@ class Symbol
 end
 
 class Proc
+    include Func
+end
+
+class Method
     include Func
 end

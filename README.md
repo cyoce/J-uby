@@ -32,7 +32,7 @@ P * x == x.map(&P)
 
 P % Q == P.(&Q)
 
-(P**Q).(*args) == P.(*args.map(&Q))
+(P**Q).(*args) == Q.(*args.map(&P))
 
 (P % [Q]).(x)   == P.(x, Q.(x))
 (P % [Q]).(x,y) == P.(x, Q.(y))
