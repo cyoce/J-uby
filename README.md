@@ -95,10 +95,10 @@ E.g. `fibonacci = :+ + [0,1]`
 ## Check if array is all even
 
 ```ruby
-:* *:even?|:all?
+:* &:even?|:all?
 
-(:* * :even?) | :all?                           # readable
-->(a){ :all?.((:* * :even?).(a))}               # expand | to lambda
+(:* & :even?) | :all?                           # readable
+->(a){ :all?.((:* & :even?).(a))}               # expand | to lambda
 ->(a){ (:even? * a).all? }                      # simplify explicit symbol calls
 ->(a){ a.map(&:even?).all? }                    # replace Proc#* with Array#map
 ```
