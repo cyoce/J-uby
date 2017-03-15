@@ -152,3 +152,8 @@ end
 class Method
     include Func
 end
+
+
+if ARGV.size > 0
+    eval File.read(ARGV[0])
+end
