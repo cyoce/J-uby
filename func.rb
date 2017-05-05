@@ -41,7 +41,20 @@ module Func
     end
 
     def ~ # rev arguments
-        ->(*args, &block){ call(*args.reverse!, &block) }
+        ->(*args, &block){
+            if args.size == 1
+                i=2
+                loop do
+                    begin
+                        return call(*[args[0]]*i)
+                    rescue ArgumentError
+                        i+=1
+                    end
+                end
+            else
+                call(*args.reverse!, &block)
+            end
+        }
     end
 
     def << (args, &block) # splat

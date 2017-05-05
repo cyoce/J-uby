@@ -17,6 +17,7 @@ sym.(*args) == sym.to_proc.(*args)
 
 (P | Q).(*args) == Q.(P.(*args))
 (P & x).(*args) == P.(x, *args)
+(~P).(x) == P.(x,x) # or as many x's as P takes
 (~P).(*args) == P.(*args.reverse)
 
 P ^ x == P.(x)
