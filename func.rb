@@ -1,3 +1,4 @@
+$main = self
 module Func
     def | (other) # compose
         ->(*args, &block){ other.call(call(*args, &block)) }
@@ -131,6 +132,7 @@ module Func
 
 end
 
+
 class Symbol
     include Func
 
@@ -143,6 +145,10 @@ class Symbol
     def =~ (other)
         to_proc =~ other
     end
+
+    def -@
+        $main.method(self)
+    end
 end
 
 class Proc
@@ -153,6 +159,17 @@ class Method
     include Func
 end
 
+class Array
+    def -@
+        ->(*args){
+            if args.length == length
+                self.zip(args).map {|fs| fs[0] ^ fs[1]}
+            elsif args.length == 1
+                self.map { |f| f ^ args[0]}
+            end
+        }
+    end
+end
 
 if ARGV.size > 0
     eval File.read(ARGV[0])

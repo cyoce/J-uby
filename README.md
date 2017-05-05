@@ -57,6 +57,13 @@ E.g. `fibonacci = :+ + [0,1]`
 
 `P !~ x` iterates `P` on `x` until `x == P.(x)`
 
+### Miscellaneous
+`-:symbol` returns the global method by that name. (e.g. `(-:puts).("hi")` prints "hi")
+
+`-array` with one argument applies it to the procs in the array. E.g., `-[:+ & 1, :* & 2] ^ 4 == [5, 8]`.
+
+`-array` with `array.length` arguments applies each proc to its corresponding argument. E.g., `(-[:floor, :ceil]).(1.9, 2.1) == [1,3]`
+
 # Examples
 
 ## Join Array with Commas
