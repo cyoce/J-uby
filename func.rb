@@ -184,6 +184,17 @@ class Array
     end
 end
 
+class Fixnum
+    alias old_minus -
+    def - (x=nil)
+        if x.nil?
+            -self
+        else
+            old_minus(x)
+        end
+    end
+end
+
 if ARGV.size > 0
     eval File.read(ARGV[0])
 end

@@ -65,6 +65,8 @@ E.g. `fibonacci = :+ + [0,1]`
 
 `-array` with `array.length` arguments applies each proc to its corresponding argument. E.g., `(-[:floor, :ceil]).(1.9, 2.1) == [1,3]`
 
+`n.-` is now the same as `n.-@` to save a byte; useful when using a symbol such as `:-|(...)`.
+
 # Examples
 
 ## Join Array with Commas
