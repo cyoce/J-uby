@@ -67,6 +67,9 @@ E.g. `fibonacci = :+ + [0,1]`
 
 `n.-` is now the same as `n.-@` to save a byte; useful when using a symbol such as `:-|(...)`.
 
+`BasicObject#_` is the identity function; for any object `o`, `o._ == o`.
+
+`p.& == p.to_proc` for any proc `p`.
 # Examples
 
 ## Join Array with Commas

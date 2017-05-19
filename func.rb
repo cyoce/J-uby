@@ -27,7 +27,11 @@ module Func
 
     def & (*a, &b) # curry
         if a.length == 0
-            ->(*args){ call(*args, &b)}
+            if b
+                ->(*args){ call(*args, &b)}
+            else
+                to_proc
+            end
         else
             x=a[0]
             ->(*args, &block){ call(x, *args, &block) }
