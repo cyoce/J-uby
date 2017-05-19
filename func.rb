@@ -1,5 +1,6 @@
 $main = self
 module Func
+
     def | (other) # compose
         ->(*args, &block){ other.call(call(*args, &block)) }
     end
@@ -24,8 +25,13 @@ module Func
     end
     alias [] ^
 
-    def & (x) # curry
-        ->(*args, &block){ call(x, *args, &block) }
+    def & (*a, &b) # curry
+        if a.length == 0
+            ->(*args){ call(*args, &b)}
+        else
+            x=a[0]
+            ->(*args, &block){ call(x, *args, &block) }
+        end
     end
 
     def - (*args)
@@ -43,12 +49,12 @@ module Func
     def ~ # rev arguments
         ->(*args, &block){
             if args.size == 1
-                i=2
+                @i ||= 1
                 loop do
                     begin
-                        return call(*[args[0]]*i)
+                        out = call(*[args[0]]*@i)
                     rescue ArgumentError
-                        i+=1
+                        @i+=1
                     end
                 end
             else
@@ -59,7 +65,6 @@ module Func
 
     def << (args, &block) # splat
         call(*args, &block)
-
     end
 
     def >> (*args, &block) # unsplat
@@ -147,6 +152,7 @@ end
 
 
 class Symbol
+
     include Func
 
     def call(*args, &block)
@@ -162,6 +168,7 @@ class Symbol
     def -@
         $main.method(self)
     end
+
 end
 
 class Proc
@@ -197,4 +204,10 @@ end
 
 if ARGV.size > 0
     eval File.read(ARGV[0])
+end
+
+class BasicObject
+    def _
+        self
+    end
 end
