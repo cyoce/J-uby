@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+require 'optparse'
 $main = self
 module Func
 
@@ -6,18 +8,12 @@ module Func
     end
 
     def ** (n)
-        if n.is_a?(Integer)
-            ->(x){
-                n.times do
-                    x = call(x)
-                end
-                x
-            }
-        else
-            ->(*args){
-                n.(*args.map(&self))
-            }
-        end
+        ->(x){
+            n.times do
+                x = call(x)
+            end
+            x
+        }
     end
 
     def ^ (*args, &block)
@@ -47,7 +43,13 @@ module Func
     end
 
     def * (x) # map
-        x.map(&self)
+        if x.is_a?(Array)
+            x.map(&self)
+        else
+            ->(*args){
+                x.(*args.map(&self))
+            }
+        end
     end
 
     def ~ # rev arguments
@@ -118,10 +120,10 @@ module Func
             if arg.length == 2
                 fork(*arg)
             elsif arg.length == 1
-                hook(*arg)
+                self.(&arg[0])
             end
         else
-            self.call(&arg)
+            hook(arg)
         end
     end
     alias % train
@@ -193,6 +195,19 @@ class Array
             end
         }
     end
+
+    def +@
+        length
+    end
+
+    alias _old_plus +
+    def + (*args)
+        if args.length == 0
+            length
+        else
+            _old_plus(*args)
+        end
+    end
 end
 
 class Fixnum
@@ -206,12 +221,69 @@ class Fixnum
     end
 end
 
-if ARGV.size > 0
-    eval File.read(ARGV[0])
+def $main.__
+    ->(x,y){[x,y]}
 end
 
 class BasicObject
     def _
         self
     end
+end
+
+def on(sym)
+    x = $options[sym] and yield x
+end
+
+if __FILE__ == $0
+    $options = options = {eval?: true}
+    OptionParser.new do |opts|
+        opts.separator ''
+
+        opts.on("-f [FILE]") do |file|
+            options[:file] = file
+        end
+
+        opts.on("-e [CODE]") do |code|
+            options[:eval] = code
+        end
+
+        opts.on("-i") do # read from STDIN instead of ARGV
+            options[:stdin?] = true
+        end
+
+        opts.on("-l") do # literal input (no eval)
+            options[:eval?] = false
+        end
+
+        opts.on("-g") do # greedy
+            options[:greedy?] = true
+        end
+
+        options[:args] = opts.order(*ARGV)
+    end
+
+    on :stdin? do
+        options[:args] = []
+        options[:args] << $_.chomp! while (print '> '; STDIN.gets)
+    end
+
+    on :greedy? do
+        options[:args] = [options[:args].join(options[:stdin?] ? "\n" : " ")]
+    end
+
+    on :eval? do
+        options[:args].map! &-:eval
+    end
+
+    on :file do |file|
+        result = eval File.read(file)
+        p result.(*options[:args]) if options[:args].length > 0
+    end
+
+    on :eval do |code|
+        result = eval code
+        p result.(*options[:args]) if options[:args].length > 0
+    end
+
 end

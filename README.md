@@ -31,12 +31,12 @@ P =~ x == (P.(x) == x)
 P / x == x.inject(&P)
 P * x == x.map(&P)
 
-P % Q == P.(&Q)
+P % [Q] == P.(&Q)
 
 (P**Q).(*args) == Q.(*args.map(&P))
 
-(P % [Q]).(x)   == P.(x, Q.(x))
-(P % [Q]).(x,y) == P.(x, Q.(y))
+(P % Q).(x)   == P.(x, Q.(x))
+(P % Q).(x,y) == P.(x, Q.(y))
 
 (P % [Q,R]).(x)   == P.(Q.(x), P.(x)
 (P % [Q,R]).(x,y) == P.(Q.(x), R.(y))           # if Q and R accept one argument
@@ -118,11 +118,7 @@ E.g. `fibonacci = :+ + [0,1]`
 ### Alternative without `map`
 
 ```ruby
-:& &:all?|~:%&:even?
+:all?.& &:even?
 
-(:& & :all?) | (~:% & :even?)                   # readable
-->(a){ (~:% & :even?).((:& & :all?).(a)) }      # expand | into lambda
-->(a){ (~:%).(:even?, :all? & a) }              # uncurry &'s
-->(a){ (:all? & a) % :even? }                   # apply ~:%
-->(a){ a.all?(&:even?) }                        # simplify & and %
+->(a){ a.all?(&:even?) }
 ```
