@@ -240,10 +240,6 @@ if __FILE__ == $0
     OptionParser.new do |opts|
         opts.separator ''
 
-        opts.on("-f [FILE]") do |file|
-            options[:file] = file
-        end
-
         opts.on("-e [CODE]") do |code|
             options[:eval] = code
         end
@@ -268,17 +264,18 @@ if __FILE__ == $0
         options[:args] << $_.chomp! while (print '> '; STDIN.gets)
     end
 
+    unless options[:stdin?]
+        file = options[:args].shift
+        result = eval File.read(file)
+        p result.(*options[:args]) if options[:args].length > 0
+    end
+
     on :greedy? do
         options[:args] = [options[:args].join(options[:stdin?] ? "\n" : " ")]
     end
 
     on :eval? do
         options[:args].map! &-:eval
-    end
-
-    on :file do |file|
-        result = eval File.read(file)
-        p result.(*options[:args]) if options[:args].length > 0
     end
 
     on :eval do |code|
