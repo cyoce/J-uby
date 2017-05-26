@@ -55,10 +55,10 @@ module Func
     def ~ # rev arguments
         ->(*args, &block){
             if args.size == 1
-                @i ||= 1
+                @i ||= 0
                 loop do
                     begin
-                        out = call(*[args[0]]*@i)
+                        return call(*[args[0]]*@i)
                     rescue ArgumentError
                         @i+=1
                     end
@@ -264,18 +264,20 @@ if __FILE__ == $0
         options[:args] << $_.chomp! while (print '> '; STDIN.gets)
     end
 
-    unless options[:stdin?]
-        file = options[:args].shift
+
+    file = options[:args].shift unless options[:stdin?] || options[:eval]
+
+    on :eval? do
+        options[:args].map! &-:eval
+    end
+
+    unless options[:stdin?] || options[:eval]
         result = eval File.read(file)
         p result.(*options[:args]) if options[:args].length > 0
     end
 
     on :greedy? do
         options[:args] = [options[:args].join(options[:stdin?] ? "\n" : " ")]
-    end
-
-    on :eval? do
-        options[:args].map! &-:eval
     end
 
     on :eval do |code|
