@@ -58,7 +58,7 @@ module Func
                 i = 0
                 loop do
                     begin
-                        return call(*[args[0]]*@i)
+                        return call(*[args[0]]*i)
                     rescue ArgumentError
                         i += 1
                     end
