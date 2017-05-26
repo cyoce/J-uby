@@ -55,12 +55,12 @@ module Func
     def ~ # rev arguments
         ->(*args, &block){
             if args.size == 1
-                @i ||= 0
+                i = 0
                 loop do
                     begin
                         return call(*[args[0]]*@i)
                     rescue ArgumentError
-                        @i+=1
+                        i += 1
                     end
                 end
             else
