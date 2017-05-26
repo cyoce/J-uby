@@ -15,48 +15,48 @@ Ruby lambdas or expressions can be converted to tacit J-uby code using the follo
 ```ruby
 sym.(*args) == sym.to_proc.(*args)
 
-(P | Q).(*args) == Q.(P.(*args))
-(P & x).(*args) == P.(x, *args)
-(~P).(x) == P.(x,x) # or as many x's as P takes
-(~P).(*args) == P.(*args.reverse)
+(F | G).(*args) == G.(F.(*args))
+(F & x).(*args) == F.(x, *args)
+(~F).(x) == F.(x,x) # or as many x's as F takes
+(~F).(*args) == F.(*args.reverse)
 
-P ^ x == P.(x)
+F ^ x == F.(x)
 
-P << x == P.(*x)
-P.>>(*x) == P.(x)
-P.-(x,y) == P.(x).(y)
+F << x == F.(*x)
+F.>>(*x) == F.(x)
+F.-(x,y) == F.(x).(y)
 
-P =~ x == (P.(x) == x)
+F =~ x == (F.(x) == x)
 
-P / x == x.inject(&P)
-P * x == x.map(&P)
+F / x == x.inject(&F)
+F * x == x.map(&F)
 
-P % [Q] == P.(&Q)
+F % [G] == F.(&G)
 
-(P**Q).(*args) == Q.(*args.map(&P))
+(F**G).(*args) == G.(*args.map(&F))
 
-(P % Q).(x)   == P.(x, Q.(x))
-(P % Q).(x,y) == P.(x, Q.(y))
+(F % G).(x)   == F.(x, G.(x))
+(F % G).(x,y) == F.(x, G.(y))
 
-(P % [Q,R]).(x)   == P.(Q.(x), P.(x)
-(P % [Q,R]).(x,y) == P.(Q.(x), R.(y))           # if Q and R accept one argument
-(P % [Q,R]).(x,y) == P.(Q.(x,y), R.(x,y))       # if Q and R accept 2 arguments
+(F % [G,H]).(x)   == F.(G.(x), F.(x)
+(F % [G,H]).(x,y) == F.(G.(x), H.(y))           # if G and H accept one argument
+(F % [G,H]).(x,y) == F.(G.(x,y), H.(x,y))       # if G and H accept 2 arguments
 ```
 
 ### Iteration operators
-`(P+init).(n)` starts an array with init, then applies `P` to the last `init.length` entries `n` times
+`(F+init).(n)` starts an array with init, then applies `F` to the last `init.length` entries `n` times
 <br>
 E.g. `fibonacci = :+ + [0,1]`
 
 
 <br>
 
-`(P**n).(x)` iterates `P` on `x` `n` times.
+`(F**n).(x)` iterates `F` on `x` `n` times.
 
 
 <br>
 
-`P !~ x` iterates `P` on `x` until `x == P.(x)`
+`F !~ x` iterates `F` on `x` until `x == F.(x)`
 
 ### Miscellaneous
 `-:symbol` returns the global method by that name. (e.g. `(-:puts).("hi")` prints "hi")
@@ -79,7 +79,7 @@ E.g. `fibonacci = :+ + [0,1]`
 
 (~ :*) & ','                                    # more readable
 ->(a){ (~ :*).(',', a) }                        # turn `&` into explicit lambda
-->(a){ :*.(a, ',') }                            # `(~P).(x,y) == P.(y,x)`
+->(a){ :*.(a, ',') }                            # `(~F).(x,y) == F.(y,x)`
 ->(a){ a.*(',') }                               # turn symbol call into explicit method call
 ->(a){ a.join(',') }                            # Array#* is an alias for Array#join
 ```
@@ -89,7 +89,7 @@ E.g. `fibonacci = :+ + [0,1]`
 
 ->(a){ :/.((:/ & :+).(a), :size.(a)) }          # expand fork to lambda
 ->(a){ (:+ / a) / a.size }                      # transform `.call`s on procs to method accesses
-->(a){ a.reduce(:+) / a.size }                  # expand `P / x` to `x.reduce(&P)`
+->(a){ a.reduce(:+) / a.size }                  # expand `F / x` to `x.reduce(&F)`
 ```
 
 ## Haskell-Style `foldr` from the existing `/`
