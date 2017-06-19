@@ -1,6 +1,69 @@
 #!/usr/bin/ruby
 require 'optparse'
 $main = self
+
+def on(sym)
+    x = $options[sym] and yield x
+end
+
+def main()
+    $options = options = {eval?: true}
+    OptionParser.new do |opts|
+        opts.separator ''
+
+        opts.on("-e [CODE]") do |code|
+            options[:eval] = code
+        end
+
+        opts.on("-i") do # read from STDIN instead of ARGV
+            options[:stdin?] = true
+        end
+
+        opts.on("-l") do # literal input (no eval)
+            options[:eval?] = false
+        end
+
+        opts.on("-g") do # greedy
+            options[:greedy?] = true
+        end
+
+        options[:args] = opts.order(*ARGV)
+    end
+
+    on :stdin? do
+        options[:args] = []
+        options[:args] << $_.chomp! while (print '> '; STDIN.gets)
+    end
+
+
+    file = options[:args].shift unless options[:stdin?] || options[:eval]
+
+    on :eval? do
+        options[:args].map! &-:eval
+    end
+
+    unless options[:stdin?] || options[:eval]
+        result = eval File.read(file)
+        p result.(*options[:args]) if options[:args].length > 0
+    end
+
+    on :greedy? do
+        options[:args] = [options[:args].join(options[:stdin?] ? "\n" : " ")]
+    end
+
+    on :eval do |code|
+        result = eval code
+        if options[:args].length > 0
+            p result.(*options[:args])
+        elsif result.respond_to?(:call)
+            p result.()
+        else
+            p result
+        end
+    end
+
+end
+
 module Func
 
     def | (other) # compose
@@ -154,6 +217,13 @@ module Func
         }
     end
 
+    def D
+        ->(x,y){call(x,y)}
+    end
+
+    def M
+        ->(x){call(x)}
+    end
 end
 
 
@@ -189,100 +259,87 @@ class Array
     def -@
         ->(*args){
             if args.length == length
-                self.zip(args).map {|fs| fs[0] ^ fs[1]}
+                zip(args).map { |fs| fs[0] ^ fs[1] }
             elsif args.length == 1
-                self.map { |f| f ^ args[0]}
+                map { |f| f[args[0]] }
+            else
+                raise 'RRREEEEEEEEEEEEEEEEEE'
             end
         }
     end
 
-    def +@
-        length
-    end
+    alias +@ length
 
-    alias _old_plus +
-    def + (*args)
-        if args.length == 0
-            length
-        else
-            _old_plus(*args)
-        end
-    end
+    alias ~ reverse
+end
+
+class String
+
+    alias +@ length
+
+    def to_a; each_char.to_a end
+
+    alias ~ reverse
 end
 
 class Fixnum
-    alias old_minus -
-    def - (x=nil)
-        if x.nil?
-            -self
+    alias _old_or |
+    def | (x=nil)
+        x ? _old_or(x) : abs
+    end
+
+    def !~ (other)
+        Array(self..other)
+    end
+
+    alias _old_plus +
+    def + (other=nil)
+        if other.nil?
+            Array(1..self)
         else
-            old_minus(x)
+            _old_plus (other)
         end
     end
-end
 
-def $main.__
-    ->(x,y){[x,y]}
-end
 
-class BasicObject
-    def _
-        self
-    end
-end
 
-def on(sym)
-    x = $options[sym] and yield x
-end
-
-if __FILE__ == $0
-    $options = options = {eval?: true}
-    OptionParser.new do |opts|
-        opts.separator ''
-
-        opts.on("-e [CODE]") do |code|
-            options[:eval] = code
+    alias _old_mul *
+    def * (other=nil)
+        if other.nil?
+            Array(0...self)
+        else
+            _old_mul(other)
         end
-
-        opts.on("-i") do # read from STDIN instead of ARGV
-            options[:stdin?] = true
-        end
-
-        opts.on("-l") do # literal input (no eval)
-            options[:eval?] = false
-        end
-
-        opts.on("-g") do # greedy
-            options[:greedy?] = true
-        end
-
-        options[:args] = opts.order(*ARGV)
     end
 
-    on :stdin? do
-        options[:args] = []
-        options[:args] << $_.chomp! while (print '> '; STDIN.gets)
-    end
-
-
-    file = options[:args].shift unless options[:stdin?] || options[:eval]
-
-    on :eval? do
-        options[:args].map! &-:eval
-    end
-
-    unless options[:stdin?] || options[:eval]
-        result = eval File.read(file)
-        p result.(*options[:args]) if options[:args].length > 0
-    end
-
-    on :greedy? do
-        options[:args] = [options[:args].join(options[:stdin?] ? "\n" : " ")]
-    end
-
-    on :eval do |code|
-        result = eval code
-        p result.(*options[:args]) if options[:args].length > 0
-    end
-
+    alias to_a *
 end
+
+def $main.__ # pair
+    ->(x,y){ [x,y] }
+end
+
+Q = ->(x){ x.to_f }
+Z = ->(x){ x.to_i }
+S = ->(x){ x.to_s }
+A = ->(x){ x.to_a }
+H = ->(x){ Hash[x] }
+_ = ->(x){ x }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+main() if $0 == __FILE__
