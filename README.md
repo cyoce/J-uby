@@ -19,12 +19,14 @@ sym.(*args) == sym.to_proc.(*args)
 (F & x).(*args) == F.(x, *args)
 (~F).(x) == F.(x,x) # or as many x's as F takes
 (~F).(*args) == F.(*args.reverse)
+(F + G).(*args) == F.(*args, &G)
 
 F ^ x == F.(x)
 
 F << x == F.(*x)
 F.>>(*x) == F.(x)
 F.-(x,y) == F.(x).(y)
++F <=> :<< & F
 
 F =~ x == (F.(x) == x)
 
@@ -67,9 +69,33 @@ E.g. `fibonacci = :+ + [0,1]`
 
 `n.-` is now the same as `n.-@` to save a byte; useful when using a symbol such as `:-|(...)`.
 
-`BasicObject#_` is the identity function; for any object `o`, `o._ == o`.
+`_` is the identity function; for any object `o`, `_[o] == o`.
 
-`p.& == p.to_proc` for any proc `p`.
+`F.& == F.to_proc` for any proc `F`.
+
+`D^F` is a version of `F` that can only be used dyadically
+
+`M^F` is a version of `F` that can only be used monadically
+
+### Aliases
+* `+some_array == some_array.+ == some_array.length`
+* `+some_string == some_string.+ == some_string.length`
+* `some_number.- == -some_number`
+* `some_number.| == some_number.abs`
+* `Z[any_object] == any_object.to_i`
+* `Q[any_object] == any_object.to_f`
+* `S[any_object] == any_object.to_s`
+* `A[any_object] == any_object.to_a`
+* `H[any_objec] == Hash[any_object]`
+* `_[any_object] == any_object`
+* `int_a !~ int_b == a..b`
+* `some_int.+ == 1..some_int`
+* `some_int.* == 0...some_int`
+* `some_int.to_a == some_int.*`
+* `some_string.to_a == some_string.each_char.to_a`
+* `~some_string == some_string.reverse`
+* `~some_array == some_array.reverse`
+
 # Examples
 
 ## Join Array with Commas

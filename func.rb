@@ -85,16 +85,7 @@ module Func
     alias [] ^
 
     def & (*a, &b) # curry
-        if a.length == 0
-            if b
-                ->(*args){ call(*args, &b)}
-            else
-                to_proc
-            end
-        else
-            x=a[0]
-            ->(*args, &block){ call(x, *args, &block) }
-        end
+        b ? ->(*args){ call(*a, *args, &b) } : a.length == 0 ? to_proc : ->(*args){ call(*a, *args) }
     end
 
     def - (*args)
@@ -206,15 +197,21 @@ module Func
     end
 
     def + (init)
-        len = 1-init.length
-        ->(n){
-            out = init.dup
-            (n+len).times do
-                out << call(*out)
-                out.shift()
-            end
-            out.last
-        }
+        if init.is_a?(Array)
+            len = 1-init.length
+            ->(n){
+                out = init.dup
+                (n+len).times do
+                    out << call(*out)
+                    out.shift()
+                end
+                out.last
+            }
+        else
+            ->(*args){
+                call(*args, &init)
+            }
+        end
     end
 
     def D
@@ -223,6 +220,10 @@ module Func
 
     def M
         ->(x){call(x)}
+    end
+
+    def +@
+        :<< & self
     end
 end
 
@@ -256,16 +257,24 @@ class Method
 end
 
 class Array
+
+
     def -@
         ->(*args){
             if args.length == length
-                zip(args).map { |fs| fs[0] ^ fs[1] }
+                zip(args).map { |f, x| f ^ x }
             elsif args.length == 1
                 map { |f| f[args[0]] }
             else
-                raise 'RRREEEEEEEEEEEEEEEEEE'
+                raise 'length error'
             end
         }
+    end
+
+    alias _or |
+    def | (x)
+        return _or(x) if x.is_a?(Array)
+        rotate(x)
     end
 
     alias +@ length
@@ -324,7 +333,7 @@ Z = ->(x){ x.to_i }
 S = ->(x){ x.to_s }
 A = ->(x){ x.to_a }
 H = ->(x){ Hash[x] }
-_ = ->(x){ x }
+I = _ = ->(x){ x }
 
 
 
