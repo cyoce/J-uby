@@ -40,7 +40,7 @@ F % [G] == F.(&G)
 (F % G).(x)   == F.(x, G.(x))
 (F % G).(x,y) == F.(x, G.(y))
 
-(F % [G,H]).(x)   == F.(G.(x), F.(x)
+(F % [G,H]).(x)   == F.(G.(x), H.(x))
 (F % [G,H]).(x,y) == F.(G.(x), H.(y))           # if G and H accept one argument
 (F % [G,H]).(x,y) == F.(G.(x,y), H.(x,y))       # if G and H accept 2 arguments
 ```
