@@ -97,7 +97,7 @@ module Func
     end
 
     def * (x) # map
-        if x.is_a?(Array)
+        if x.is_a?(Enumerable)
             x.map(&self)
         else
             ->(*args){
